@@ -1,26 +1,38 @@
 version: '3'
 services:
   web:
-    # Replace username/repo:tag with your name and image details.
-    image: '1010124/test-py:release-0.0.14'
-    networks:
-      - 'webnet'
-    ports:
-      - 80:80
+        # Replace username/repo:tag with your name and image details.
+        image: '1010124/test-py:release-0.0.19'
+        networks:
+          - 'webapp'
+        ports:
+           - 80:80
+        #restart: always
+        deploy:
+              replicas: 3
+              resources:
+                limits:
+                  cpus: "0.2"
+                  memory: 100M
+              restart_policy:
+                condition: on-failure
   redis:
-    image: redis
-    networks:
-      - 'webnet'
-    volumes:
-      - "/home/docker/data:/data"
-    command: redis-server --appendonly yes
+        image: redis
+        volumes:
+          - "/home/docker/data:/data"
+        networks:
+          - 'webapp'
+        command: redis-server --appendonly yes
+       # restart: always
 #  nginx:
 #        build: nginx
-#        container_name: elportal-nginx
 #        working_dir: /app
 #        ports:
 #            - 80:80
+#        volumes:
+#            - /home/docker/data/logs/nginx:/var/log/nginx
 #        networks:
-#            - 'webnet'
+#          - 'webapp'
+        #restart: always
 networks:
-  webnet:
+  webapp:
