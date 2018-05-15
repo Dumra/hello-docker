@@ -2,14 +2,17 @@ version: '3'
 services:
   web:
         # Replace username/repo:tag with your name and image details.
-        image: '1010124/test-py:release-0.0.19'
+        image: '1010124/test-py:release-0.0.20'
         networks:
           - 'webapp'
-        ports:
-           - 80:80
+#        ports:
+#           - 80:80
         #restart: always
         deploy:
               replicas: 3
+              update_config:
+                 parallelism: 2
+                 delay: 1s
               resources:
                 limits:
                   cpus: "0.2"
@@ -24,15 +27,15 @@ services:
           - 'webapp'
         command: redis-server --appendonly yes
        # restart: always
-#  nginx:
-#        build: nginx
-#        working_dir: /app
-#        ports:
-#            - 80:80
-#        volumes:
-#            - /home/docker/data/logs/nginx:/var/log/nginx
-#        networks:
-#          - 'webapp'
-        #restart: always
+  nginx:
+        image: '1010124/nginx-balancer:version1'
+        working_dir: /app
+        ports:
+            - 80:80
+        volumes:
+            - /home/docker/data/logs/nginx:/var/log/nginx
+        networks:
+          - 'webapp'
+#        restart: always
 networks:
   webapp:
