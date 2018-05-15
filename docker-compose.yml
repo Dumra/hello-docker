@@ -2,9 +2,11 @@ version: '3'
 services:
   web:
     # Replace username/repo:tag with your name and image details.
-    image: '1010124/test-py:release-0.0.12'
+    image: '1010124/test-py:release-0.0.14'
     networks:
       - 'webnet'
+    ports:
+      - 80:80
   redis:
     image: redis
     networks:
@@ -12,15 +14,13 @@ services:
     volumes:
       - "/home/docker/data:/data"
     command: redis-server --appendonly yes
-  nginx:
-        build: nginx
-        container_name: elportal-nginx
-        working_dir: /app
-        ports:
-            - 80:80
-        links:
-            - app
-        networks:
-            - 'webnet'
+#  nginx:
+#        build: nginx
+#        container_name: elportal-nginx
+#        working_dir: /app
+#        ports:
+#            - 80:80
+#        networks:
+#            - 'webnet'
 networks:
   webnet:
